@@ -1,0 +1,48 @@
+[
+  {
+    "plan": "Starter",
+    "price": "$5",
+    "information": [
+      { "feature": "Order Details" },
+      { "feature": "Order History" },
+      { "feature": "Customer Search" },
+      { "feature": "Order Filter" },
+      { "feature": "Pin Order" }
+    ]
+  },
+  {
+    "plan": "Professional",
+    "price": "$19",
+    "information": [
+      { "feature": "Order Details" },
+      { "feature": "Order History" },
+      { "feature": "Customer Search" },
+      { "feature": "Order Filter" },
+      { "feature": "Pin Order" },
+      { "feature": "Order Search" },
+      { "feature": "Order Status" },
+      { "feature": "Shipping Status" },
+      { "feature": "Payment Status" }
+    ]
+  },
+  {
+    "plan": "Enterprise",
+    "price": "$29",
+    "information": [
+      { "feature": "Order Details" },
+      { "feature": "Order History" },
+      { "feature": "Customer Search" },
+      { "feature": "Order Filter" },
+      { "feature": "Pin Order" },
+      { "feature": "Order Search" },
+      { "feature": "Order Status" },
+      { "feature": "Shipping Status" },
+      { "feature": "Payment Status" },
+      { "feature": "Catalog Search" },
+      { "feature": "Order Payment" },
+      { "feature": "Order Creation" },
+      { "feature": "Order Refund" },
+      { "feature": "Quick Re-Order" }
+    ]
+  }
+]

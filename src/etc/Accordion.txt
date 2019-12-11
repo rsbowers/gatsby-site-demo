@@ -1,0 +1,67 @@
+import React from 'react';
+import { useAccordion } from '@zendeskgarden/container-accordion';
+import Heading from '../../atoms/Heading';
+import { AccordionButton, AccordionWrapper, Cheveron, StyledButton } from './FAQs.style';
+
+const Accordion = ({ data, faqClick }, { expandable = false, collapsible = true } = {}) => {
+  const {
+    getHeaderProps,
+    getTriggerProps,
+    getPanelProps,
+    expandedSections,
+    disabledSections,
+  } = useAccordion({
+    expandedSections: [0],
+    expandable,
+    collapsible,
+  });
+
+  return (
+    <>
+      {Object.keys(data).map((categoryTitle, index) => {
+        const disabled = disabledSections.indexOf(index) !== -1;
+        const hidden = expandedSections.indexOf(index) === -1;
+        console.log(getPanelProps({
+          index,
+          role: null,
+          hidden,
+        }));
+        return (
+          <AccordionWrapper key={index}>
+            <StyledButton
+              {...getHeaderProps({ role: null, ariaLevel: null })}
+              {...getTriggerProps({
+                index,
+                role: null,
+                tabIndex: null,
+                disabled,
+              })}
+            >
+              <Heading tag="2" size="MD">
+                <Cheveron rotated={!hidden} />
+                {categoryTitle}
+              </Heading>
+            </StyledButton>
+            <section
+              {...getPanelProps({
+                index,
+                role: null,
+                hidden,
+              })}
+            >
+              {data[categoryTitle].map(({ title, id }) => (
+                <Heading tag="3" size="MD" key={`faq-heading-${id}`}>
+                  <AccordionButton onClick={() => (faqClick(id))} type="button">
+                    {title}
+                  </AccordionButton>
+                </Heading>
+              ))}
+            </section>
+          </AccordionWrapper>
+        );
+      })}
+    </>
+  );
+};
+
+export default Accordion;

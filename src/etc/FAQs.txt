@@ -1,0 +1,108 @@
+/* eslint-disable react/no-danger */
+import React, { useState, useEffect } from 'react';
+import { Grid, Row, Col } from '@zendeskgarden/react-grid';
+import { useStaticQuery, graphql } from 'gatsby';
+
+import Heading from '../../atoms/Heading';
+import Section from '../../atoms/Section';
+import { Tagline } from '../../../styles/core';
+import Accordion from './Accordion';
+import { StyledCol, StyledRow, StyledGrid, StyledFaqInfo } from './FAQs.style';
+
+const FAQ = () => {
+  const [selectedFaq, setSelectedFaq] = useState(null);
+
+  const data = useStaticQuery(graphql`
+  query FAQQuerys {
+    FAQ: allMarkdownRemark (
+      sort: {order: ASC, fields: frontmatter___priority}
+      filter: {fileAbsolutePath: {regex: "/(FAQs)/.*\\.md$/"}}) {
+      edges {
+        node {
+          id
+          frontmatter {
+            title
+            category
+          }
+          html
+        }
+      }
+    }
+  }
+`);
+
+  const {
+    FAQ: {
+      edges: faqs,
+    },
+  } = data;
+
+  const FAQsData = faqs.reduce((accum, faq) => {
+    const {
+      node: {
+        id,
+        frontmatter: {
+          title,
+          category,
+        },
+        html,
+      },
+    } = faq;
+    if (!accum[category]) {
+      // eslint-disable-next-line no-param-reassign
+      accum[category] = [];
+    }
+    accum[category].push({
+      id, title, html,
+    });
+    return accum;
+  }, {});
+
+  const faqClick = (selectedId) => {
+    const { node: faq } = faqs.find(({ node: { id } }) => (id === selectedId));
+    setSelectedFaq(faq);
+  };
+
+  useEffect(() => {
+    if (faqs && !selectedFaq) {
+      const { node: faq } = faqs[0];
+      setSelectedFaq(faq);
+    }
+  }, [selectedFaq, faqs]);
+
+  return (
+    <div>
+      <Section format="highlight" mode="halfscreen">
+        <Grid>
+          <Row>
+            <Col md={6}>
+              <Heading tag="1">
+                <div>Frequently</div>
+                <Tagline>asked questions.</Tagline>
+              </Heading>
+            </Col>
+          </Row>
+        </Grid>
+      </Section>
+      <Section format="light">
+        <StyledGrid>
+          <StyledRow>
+            <StyledCol size={5}>
+              <Accordion data={FAQsData} faqClick={faqClick} expandable collapsible />
+            </StyledCol>
+            <StyledCol>
+              {selectedFaq && (
+                <StyledFaqInfo>
+                  <Heading tag="2" size="MD">{selectedFaq.frontmatter.title}</Heading>
+                  <div dangerouslySetInnerHTML={{ __html: selectedFaq.html }} />
+                </StyledFaqInfo>
+              )}
+            </StyledCol>
+          </StyledRow>
+        </StyledGrid>
+      </Section>
+    </div>
+  );
+};
+
+export default FAQ;
